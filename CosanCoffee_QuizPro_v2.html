@@ -1,0 +1,2711 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cosan Coffee - Barista Master</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+    :root {
+      --primary: #00598D;
+      --primary-hover: #00456F;
+      --primary-light: #E0F2FE;
+      --bg: #F8FAFC;
+      --card-bg: #FFFFFF;
+      --text-main: #0F172A;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      --correct: #22C55E;
+      --correct-bg: #DCFCE7;
+      --wrong: #EF4444;
+      --wrong-bg: #FEE2E2;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 600px;
+      transition: max-width 0.3s ease;
+    }
+
+    .app-container.wide {
+      max-width: 800px;
+    }
+
+    .app-header {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+      background: var(--card-bg);
+      padding: 1rem 1.25rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 59, 141, 0.04);
+      border: 1px solid var(--border);
+    }
+
+    .logo-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo-img {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      object-fit: cover;
+      box-shadow: 0 4px 10px rgba(0, 89, 141, 0.15);
+    }
+
+    .logo-area h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+
+    .sub-title {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .user-stats-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: #F1F5F9;
+      padding: 6px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+    }
+
+    .level-badge {
+      background: var(--primary);
+      color: white;
+      font-weight: 700;
+      font-size: 11px;
+      padding: 3px 6px;
+      border-radius: 6px;
+      text-transform: uppercase;
+    }
+
+    .xp-bar-container {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+      width: 90px;
+    }
+
+    .xp-bar-label {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .xp-track {
+      height: 6px;
+      background: #E2E8F0;
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .xp-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+      width: 0%;
+    }
+
+    .tab-bar {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 1rem;
+      scrollbar-width: none;
+    }
+
+    .tab-bar::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab {
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      color: var(--text-muted);
+      white-space: nowrap;
+      transition: all 0.2s ease;
+    }
+
+    .tab:hover {
+      border-color: #CBD5E1;
+      color: var(--text-main);
+    }
+
+    .tab.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 4px 10px rgba(0, 89, 141, 0.15);
+    }
+
+    .mode-bar {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 1.25rem;
+      background: #E2E8F0;
+      padding: 4px;
+      border-radius: 12px;
+    }
+
+    .mode-btn {
+      flex: 1;
+      padding: 8px 2px;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      text-align: center;
+    }
+
+    .mode-btn:hover {
+      color: var(--text-main);
+    }
+
+    .mode-btn.active {
+      background: var(--card-bg);
+      color: var(--primary);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    }
+
+    /* Mastery badges */
+    .mastery-badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .mastery-badge.mastered {
+      background: var(--correct-bg);
+      color: var(--correct);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .mastery-badge.learning {
+      background: var(--primary-light);
+      color: var(--primary);
+      border: 1px solid rgba(0, 89, 141, 0.2);
+    }
+
+    .mastery-badge.struggling {
+      background: #FFF7ED;
+      color: #EA580C;
+      border: 1px solid rgba(234, 88, 12, 0.2);
+    }
+
+    .mastery-badge.unseen {
+      background: #F1F5F9;
+      color: #64748B;
+      border: 1px solid rgba(100, 116, 139, 0.15);
+    }
+
+    /* Stats dashboard */
+    .stats-dashboard {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .stats-summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    @media (max-width: 480px) {
+      .stats-summary-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stats-card {
+      background: #F8FAFC;
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .stats-val {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 3px;
+    }
+
+    .stats-label {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .cat-progress-list {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+
+    .cat-progress-item {
+      margin-bottom: 10px;
+    }
+
+    .cat-progress-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .cat-progress-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .cat-progress-bar-wrap {
+      height: 8px;
+      background: #E2E8F0;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .cat-progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 4px;
+    }
+
+    /* Filter buttons */
+    .filter-bar {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .filter-btn {
+      padding: 4px 8px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      font-size: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .mastery-list-container {
+      max-height: 250px;
+      overflow-y: auto;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #F8FAFC;
+      padding: 6px;
+    }
+
+    .mastery-list-item {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      border-radius: 8px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mastery-list-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .mastery-item-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .mastery-item-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    #content {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 4px 20px rgba(0, 59, 141, 0.04);
+      border: 1px solid var(--border);
+      width: 100%;
+      position: relative;
+    }
+
+    .card-wrap {
+      perspective: 1000px;
+      cursor: pointer;
+      margin-bottom: 0.75rem;
+    }
+
+    .card-inner {
+      position: relative;
+      width: 100%;
+      min-height: 220px;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transform-style: preserve-3d;
+    }
+
+    .card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card-face {
+      position: absolute;
+      width: 100%;
+      min-height: 220px;
+      backface-visibility: hidden;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.01);
+    }
+
+    .card-front {
+      background: var(--card-bg);
+    }
+
+    .card-back {
+      background: #F8FAFC;
+      transform: rotateY(180deg);
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .card-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      text-transform: uppercase;
+    }
+
+    .card-name {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text-main);
+      text-align: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-cat {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .ingr-list {
+      list-style: none;
+      width: 100%;
+    }
+
+    .ingr-list li {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+      padding: 7px 0;
+      border-bottom: 1px solid #F1F5F9;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .ingr-list li:last-child {
+      border-bottom: none;
+    }
+
+    .ingr-amt {
+      color: var(--text-muted);
+      font-weight: 600;
+      background: #F1F5F9;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 12px;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin-top: 0.75rem;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 1.25rem;
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      border-color: #CBD5E1;
+      background: #F8FAFC;
+      color: var(--primary);
+    }
+
+    .nav-btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+
+    .counter {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .quiz-opt {
+      width: 100%;
+      padding: 10px 16px;
+      margin: 6px 0;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      cursor: pointer;
+      text-align: left;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-main);
+      transition: all 0.2s ease;
+    }
+
+    .quiz-opt:hover:not(:disabled) {
+      border-color: var(--primary);
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .quiz-opt.correct {
+      background: var(--correct-bg);
+      color: var(--correct);
+      border-color: var(--correct);
+      font-weight: 600;
+    }
+
+    .quiz-opt.wrong {
+      background: var(--wrong-bg);
+      color: var(--wrong);
+      border-color: var(--wrong);
+      font-weight: 600;
+    }
+
+    .score-bar {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+      background: #F1F5F9;
+      padding: 6px 10px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+
+    .browse-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 10px;
+    }
+
+    .browse-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .browse-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(0, 59, 141, 0.05);
+      transform: translateY(-2px);
+    }
+
+    .browse-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .browse-cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .detail-box {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 1.25rem;
+      margin-bottom: 0.75rem;
+    }
+
+    /* Simulator Styles */
+    .sim-container {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 20px;
+    }
+
+    @media (max-width: 768px) {
+      .sim-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .sim-left {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #F8FAFC;
+      padding: 1.25rem;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+    }
+
+    .scale-base {
+      background: #E2E8F0;
+      border-radius: 16px;
+      padding: 14px;
+      width: 100%;
+      max-width: 200px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.08), 0 4px 8px rgba(0, 0, 0, 0.03);
+      border: 4px solid #CBD5E1;
+      margin-bottom: 12px;
+    }
+
+    .scale-display {
+      background: #1E293B;
+      color: #10B981;
+      font-family: monospace;
+      font-size: 22px;
+      font-weight: 700;
+      text-align: right;
+      width: 100%;
+      padding: 6px 10px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      letter-spacing: 0.5px;
+      box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+      text-shadow: 0 0 4px rgba(16, 185, 129, 0.4);
+    }
+
+    .glass-container {
+      width: 110px;
+      height: 140px;
+      border: 3px solid rgba(0, 89, 141, 0.4);
+      border-top: none;
+      border-radius: 0 0 16px 16px;
+      position: relative;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(1px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column-reverse;
+    }
+
+    .glass-layer {
+      width: 100%;
+      transition: height 0.3s ease, background-color 0.3s ease;
+      border-top: 1px dashed rgba(255, 255, 255, 0.15);
+    }
+
+    .scale-buttons {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      max-width: 200px;
+      margin-bottom: 0.75rem;
+    }
+
+    .btn-secondary {
+      background: #E2E8F0;
+      color: var(--text-main);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #CBD5E1;
+    }
+
+    .btn-danger {
+      background: #FEE2E2;
+      color: #991B1B;
+      border: 1px solid rgba(153, 27, 27, 0.1);
+    }
+
+    .btn-danger:hover {
+      background: #FCA5A5;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+      border: 1px solid var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .added-list-wrap {
+      width: 100%;
+      background: white;
+      padding: 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.01);
+    }
+
+    .added-list-wrap h3 {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .added-list {
+      list-style: none;
+      max-height: 120px;
+      overflow-y: auto;
+      font-size: 12px;
+    }
+
+    .added-list li {
+      padding: 3px 0;
+      border-bottom: 1px solid #F1F5F9;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .empty-list {
+      color: var(--text-muted);
+      text-align: center;
+      padding: 6px 0;
+      font-style: italic;
+    }
+
+    .sim-right {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sim-target-header {
+      background: var(--primary-light);
+      border-radius: 12px;
+      padding: 12px;
+      border: 1px solid rgba(0, 89, 141, 0.08);
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .sim-target-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 2px;
+    }
+
+    .hint-btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 5px;
+      cursor: pointer;
+      position: absolute;
+      top: 12px;
+      right: 12px;
+    }
+
+    .recipe-hint-box {
+      background: white;
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-top: 8px;
+      font-size: 12px;
+      border: 1px solid var(--border);
+    }
+
+    .shelf-tabs {
+      display: flex;
+      gap: 3px;
+      background: #F1F5F9;
+      padding: 3px;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .shelf-tab {
+      flex: 1;
+      padding: 5px;
+      border: none;
+      background: transparent;
+      font-size: 10px;
+      font-weight: 700;
+      border-radius: 6px;
+      cursor: pointer;
+      color: var(--text-muted);
+      text-align: center;
+      transition: all 0.2s ease;
+    }
+
+    .shelf-tab.active {
+      background: white;
+      color: var(--primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    .shelf-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 6px;
+      max-height: 180px;
+      overflow-y: auto;
+      margin-bottom: 12px;
+      background: #F8FAFC;
+      padding: 6px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+    }
+
+    .shelf-item {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s;
+    }
+
+    .shelf-item:hover {
+      border-color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .shelf-item-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-main);
+    }
+
+    .serve-btn {
+      width: 100%;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      box-shadow: 0 4px 10px rgba(0, 89, 141, 0.15);
+    }
+
+    /* Numeric Pour Panel */
+    .pour-modal {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.98);
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      padding: 1rem;
+    }
+
+    .pour-modal-content {
+      width: 100%;
+      max-width: 280px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .pour-modal-content h3 {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--primary);
+      text-align: center;
+    }
+
+    .pour-input-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #F1F5F9;
+      border-radius: 8px;
+      padding: 6px 12px;
+    }
+
+    .pour-input-wrap input {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--text-main);
+      background: transparent;
+      border: none;
+      text-align: center;
+      width: 100px;
+      outline: none;
+    }
+
+    .pour-input-wrap span {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .num-pad {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+
+    .num-pad button {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.1s;
+    }
+
+    .num-pad button:active {
+      background: #E2E8F0;
+    }
+
+    .presets {
+      display: flex;
+      gap: 4px;
+    }
+
+    .presets button {
+      flex: 1;
+      background: #F1F5F9;
+      border: 1px solid var(--border);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .pour-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+      margin-top: 6px;
+    }
+
+    /* Audit / Rating */
+    .result-card {
+      text-align: center;
+      animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .stars-wrap {
+      font-size: 30px;
+      margin: 6px 0;
+      color: #EABF5E;
+    }
+
+    .result-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .audit-list {
+      text-align: left;
+      background: #F8FAFC;
+      padding: 10px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-size: 12px;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .audit-item {
+      padding: 3px 0;
+      border-bottom: 1px solid #E2E8F0;
+    }
+
+    .audit-item:last-child {
+      border-bottom: none;
+    }
+
+    .search-container {
+      margin-bottom: 0.75rem;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 8px 14px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      outline: none;
+      font-family: inherit;
+      font-size: 13px;
+      transition: all 0.2s;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 89, 141, 0.1);
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0.9);
+        opacity: 0;
+      }
+
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @media(max-width: 480px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+
+      .card-name {
+        font-size: 18px;
+      }
+
+      .scale-base {
+        max-width: 160px;
+      }
+
+      .glass-container {
+        width: 90px;
+        height: 120px;
+      }
+
+      .sim-container {
+        gap: 12px;
+      }
+    }
+
+    /* Swipe T/F Styles */
+    .swipe-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.75rem;
+      position: relative;
+      width: 100%;
+      perspective: 1000px;
+    }
+
+    .swipe-card-wrapper {
+      position: relative;
+      width: 100%;
+      max-width: 340px;
+      height: 280px;
+      margin-bottom: 1.5rem;
+    }
+
+    .swipe-card {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 10px 25px rgba(0, 59, 141, 0.06);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+      transform-origin: center bottom;
+      transition: transform 0.1s ease, opacity 0.1s ease;
+      z-index: 2;
+    }
+
+    .swipe-card.dragging {
+      cursor: grabbing;
+      transition: none;
+    }
+
+    .swipe-card.resetting {
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+    }
+
+    .swipe-card.flying-left {
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+      transform: translate3d(-400px, 50px, 0) rotate(-30deg) !important;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .swipe-card.flying-right {
+      transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.5s ease;
+      transform: translate3d(400px, 50px, 0) rotate(30deg) !important;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .swipe-badge {
+      position: absolute;
+      top: 25px;
+      font-size: 20px;
+      font-weight: 800;
+      padding: 6px 14px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      opacity: 0;
+      transform: rotate(-12deg);
+      pointer-events: none;
+      z-index: 3;
+      letter-spacing: 1px;
+    }
+
+    .badge-true {
+      right: 25px;
+      color: var(--correct);
+      border: 3px solid var(--correct);
+      transform: rotate(12deg);
+    }
+
+    .badge-false {
+      left: 25px;
+      color: var(--wrong);
+      border: 3px solid var(--wrong);
+      transform: rotate(-12deg);
+    }
+
+    .swipe-actions {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .swipe-btn {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      background: var(--card-bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+      transition: all 0.2s ease;
+    }
+
+    .swipe-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+    }
+
+    .swipe-btn:active {
+      transform: scale(0.95);
+    }
+
+    .swipe-btn.btn-salah {
+      color: var(--wrong);
+      border-color: rgba(239, 68, 68, 0.2);
+      background: var(--wrong-bg);
+    }
+
+    .swipe-btn.btn-salah:hover {
+      background: #fecaca;
+    }
+
+    .swipe-btn.btn-benar {
+      color: var(--correct);
+      border-color: rgba(34, 197, 94, 0.2);
+      background: var(--correct-bg);
+    }
+
+    .swipe-btn.btn-benar:hover {
+      background: #bbf7d0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-container" id="appContainer">
+    <header class="app-header">
+      <div class="logo-area">
+        <img
+          src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCALMAswDASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwDx+iiiv0I/MQooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKMUoGTgVbsNL1O/k8ux0+7unP8MMLOfyANS5RWrLjGUtipik5rsNO+GHxCv8AH2fwfq4B6edbmIfm+BW9afAj4oXGC3h6OAH/AJ63sI/QOT+lYSxdFbzS+ZvHB15bQb+R5jS816/D+zp8RZB88elRf793n+SmrCfs1/EA9bzQV+tzJ/SOoeYYdfbX3miy7Ev7D+48Y5o5r2Z/2bPiCv3brQn/AN26f+sYqtL+zt8R0+7Dpkn+7dgfzApLH4d/bX3g8uxK+w/uPIuKOK9Uf9n74mL00q0b6Xsf9SKZ/wAKC+J3/QEt/wDwOi/+Kq/r1D+dE/UMR/I/uPLuvRaMEV6dN8BfihGhZfD8UuOyX0Of1YVyXiPwR4v8PAtrPh7UrOMf8tWhLR/99jK/rVQxVKbtGSb9SJYSvBXlBpehz2KMUHI4PFJk1vzHPZhRRRTEFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFADsAdaQdadFHJLKqIhZ3IVQOpJ4Ar6m+BnwOstOto9e8YWlvfXcqhoLORA0cQ65YHhj7HgVyYrFww0eaXyXc7cJgp4qfLD5voj5l0bRtV1q7FrpOnXV9Mf4IImYj64HA9zXqPhn9nnx3qqpLfJaaTE3/AD3k3OPwXP8AOvr+wsrOygENnaQW0Y6JDGEUfgBirQye9eFWzupLSCSPoaOQ0o/xG2fPOi/sw6TGFbVvEN1O3dYIgin8TzXY6V8APhvY4Mum3N6R18+4Yg/gMV6tig1wTx+InvJ/I9Gnl2GhtBfPU5LSvhz4G0wD7H4W0tSOheASEfi2TXT29tBbxCOCCOJB0VEAA/AVLQa5pVJS3bZ1RpQj8KS+Q7A9KKKKk1CiiigAooooAKKKKADFRSRpIhSRAysMEEZBH0qWigTV9znbjwV4QnkMkvhjRnc8ljZR5P1OK8k/aC+E3h0eELvxDoOnxade2S+Y6wDakijrkdAfpXvdc18UYvO+Hmuxf3rKT/0E11YbEThVi03ujixWGpToy0W3Y/PuilPU0lfbo+Ae4UUUUxBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAHVfCbThqvxG0SyYZVrpWYewOa+/YlCoqjoAAK+Gv2d4jJ8XNFAGcOzfkpr7nFfL5226qXkfXZBFKlJ+Y6iiivFPoAooooAKKKKACiiigAooooAKKKKACiiigAooooAB0rI8YRef4X1OI/xWkg/8dNa/eq2oW4urKe3JwJY2TPpkYqoO0kzOouaLR+b8mVkZT2JFJmvT/id8GPFPg60uNYle0vdOSQ5kgc7kUngspAx+BNeYGvuaFWFaPNB3R+e4ijOlO01ZiUUUVuc4UUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB7l+yBoP2/xtda1L9zT4cKP9puB+lfW/evnz9jTSZ7fQNW1eaKRIrmVUiJGFcL1I9eTivoP2r43M58+Ieu2h9zlFP2eFTtvqOooorzz1QooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAOQ+Lehaj4j8Balo+lCE3dzGEQSttXr3ODXwz4r8Pap4W1yfR9Yg8m7gxuAOVIPQg9wa/RMgV5f8cvhXZePdL+122y31u2Q+RN2kHXY3qPQ9q9XLMeqEuSWz69jxc1y94iPPDdHxNRV3WtLvdG1OfTtQt3guYHKOjDGD/hVKvq4yUldHxsouLswoooqiQooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAX7pqW1glurmO2t4zJLIwRFAySScCowO5rtfhD43svA+vyaneaHFqm6PagYhWjOc5BIIB/CsqrlGm3BXfY2oxhKaU3ZdT7O+Gmhr4c8D6To4GGt7ZQ/GMtjJP510lch8KPG8Hj3wqNchsXsv3rRtC0gcgg+oA6/Suv/lXw1ZTVR8299T9Bw/I6a5HpbQdRRRWZuFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQA09Kq3V/ZWriO6u4IWIJAkkAOPXmrJwRXxB+0drz658VNSJkLQ2RFtEM8AL1/UmuzBYN4qbjeySPPzDGrCQUrXbO0/am8Z+DdfFvpWiiO71S1uCZruOMBQoGCob+LJ9OPevA+p5o5FGO9fXYagqFNQi727nxWJxDxFRzaSb7CUUUV0HMFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB9W/sY3fmeD9Vsyf8AVXYYD2Kive8V8y/sV3e2816yJ6pHIB+JFfTmea+LzKPLiJH3eUz5sLEWiiiuE9MKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigCC7cRW0sh7IzfkK/PDxfcteeKdUumOTLdSNn6sa/QLxVcC18O6hcE4EdtI2fopr87b1zJdzSH+KRj+tfQZHH4n6HzHEMvgiRUUUV9EfMBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAHt/7Hd35PxDurYnAntG49wQa+vBXxH+zFd/ZPi3pwzgTK6H8q+2x2r5LOY2r37o+zyKXNh7dmLRRRXlHtidaKDXl3xV+M2geBNRGly2lxqGobA7RREKqA9Mse/sAaulSnVlywV2Y1q0KMeabsj1AH0pTXzdJ+1FDsOzwlJu7Zuhj/0GuZ1z9pXxddMRpenadYL2LAyN+pxXdHKsTJ7WPPlnOFiviv6H1sKWvipvj78SWbcNTtR7C2XFfRnwB8eXfjzwe95qSRrf20vlTGMYVjjIYDtmoxOXVcPHnlaxeFzSjiZ8kbp+Z6RijHelPpXM/E/WLvQfAmratY4FzbW7PGWGQD64rignKSit2ehUkoRcnsjpdwxzQCK/P3WfH/jTVbv7Te+JdUZ85Hl3DIo+gUgU1fHvjRU2L4o1bH/Xy3+Ne2skqW+JHgviCnf4XY/QIso6kUoOff6V+edx4t8UTtul8R6sx/6/JP8AGui8EfFXxp4e1i2k/tu7u7USASwXMhkVlzyOeRx6GpnklSMbqSYU8/pykk4tH3bRVXTLlb3T7e6Aws8SyAezKD/WrPWvGas7M99PmV0LRRRSKOF+O+p/2V8LtauAcM8BjX6txXweeTk19k/taXDQ/CySNTjzbhFP0zXxsa+oyWNqLfdnx+fzbrqPZCUUUV7R4IUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB2HwYu/sfxP0KbOB9qVT+PFffC9AfWvzt8IXBtPFOl3AONl1Gf/AB4V+htq/mWsTjoyA/pXzWeR/eRfkfV8PzvCS8yxRQKK8I+jE7mvjz9r14G+J6RxxIsiWaeYw6sTkjP0FfYhr4y/a0/5K1N/16xfyr1cmX+0fJni56/9m+Z5DRRQOtfWnxYvevqL9ipmOg68h6C5Qj/vmvl09TX1V+xfAV8JazOR9+7VR+C15mbP/Z38j1slV8UvQ+gO9cV8cMf8Kr8QZ/59GrtPSuH+O7bfhPr5/wCnZhXy2H/ix9UfYYr+DP0Pg2iiivu4n509wNS2i5uol9XUfrUVXNEjM2s2UQ/jnRfzYVM3aLZdNXkkfoZ4aTy/D2np/dtYx/46K0h0qvp6eVYW8X92JV/IAVZr4GbvJn6PTVoJBRRRSLPEv2wW2/DaBc9bxf618g19Y/tlzhPBOmwZ5e7z+Qr5Or63J1bDr1Z8Tnbvin6BRRRXqnjhRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFAoooAmtpDFeRSDqjq35HNfof4SnF14Z024Bz5lrG35qK/Os85r75+DN39t+GWgz5yTaKD+HFeBncfcjLzPpOH5+/JeR2NFFFfOH1QmK+Nf2tVx8V5D62kX8jX2Sa+Sv2yLIw+PtPvR0uLMD8VYivUyd2xFvJnjZ5FvDNrozwuiiivrT4oXrX2F+yDbeT8MHmI5mvJD+WBXx7/AAmvtr9mK2+z/CDSzjHms8n5n/61eRnUrUF5s9zIo3xDfZHp5rgP2gW2fCPXPeDH6135rzb9pKURfCLVyf4gq/m1fOYVXrR9UfUYx2oSfkz4eooor7o/O2KvWtz4fW/2vxto1vjO+8jH/jwrD/irtfgdbfavitoEeMgXQc/Qc1lXlalJ+TN8Or1Yru0feaDCgegpw6Ui/dpR0r4M/RlsFFFFAz5p/bTvRjQrAHnLyEfpXzVXtn7YWofafiLbWSnItbQZHuxzXih6Cvs8tjy4aB8Fmk+fEyfnYSiiiu884KKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAXtX21+zFc/avhBpYLZMLPH+TV8SV9gfse3Jm+Gk0BOfJvXH5gGvHzqN6N+zR7mRStiGu6Pa6KKK+VPshDXzV+2vAM+HrnHJ8yPP5GvpU9a+f/2zdOurnw1o17BA8kVvcOJWUE7dyjBOO3Fd2Wy5cRG55ubR5sLJI+Vc0Zpec4pwSQjIjfH0NfZcyPheSXYb7195fAy2+y/CrQISMH7MGP4kmvh/QNE1PW9Vt9O0+ynnlmkVAEjJxk9T6AV+gXhPTv7J8N6dpp629ukZx6hRn9a8HO6icIxvre59FkFKSnKbWlrGpXlH7VcjR/CW7C/xTRg/TNesda87/aF0K+8QfC/UbPT4TPcJtlWNRlmCnJAHrivFwjUa8W9rnv42LlQklvY+Gcml5q4dJ1UOU/sy93KcEeQ2QfyqaPQNdkOE0a/bPpbt/hX23tIdz4H2U30M5sgYNeofsv2huvi3pzYyIUdz7YWuV034f+NtQcC08L6rLnv9nYD8SRX0F+zX8Ktf8Katca/4hgjtZXi8uGDeGcZ6k44H0zmuHHYqnGjJXV2rHoZfhKsq0XyuyerPoEUUUV8efchxSE/Lmlqnq9wLTTbq6Y4EULP+QJpxV3YmTsrs+G/j3qY1b4ra7Or7kjn8lfoox/PNcKOlW9aumvtWvb1zlrid5Cf95iaqY5r7uhDkpqPZI/OsRPnqyl3bEooorYwCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAHD7pr6m/YsuN3hjW7bP3LtWx9VFfLDda+jf2Krvbf+ILInrHFIB+JFebmsb4aR6uTy5cVHzPp2iiivjz7kKhuIIZ4jFPFHLG3VHQMD9QamooF6mOPDXh4NkaFpufX7Kn+FSjQNEAx/Y+ngf8AXsn+FX2dFBYsAB1JrNu/Efh+1JW61vTYCOokukX+Zq06j2uzFqlHeyLVpp2n2h3WtjbQE944lU/oKtjNc9/wm3g7OP8AhKtEz/2EIv8A4qtTTdU07VITNpt/a3cYOC8EqyKD9QcUpRlu0yoTp7RaLhxS9etIPSsnxZrlp4b8P3mtX+429rGXYKMk46Ae9JJyaS3ZUpKKbeyNIQwhiyxICepAGaftX0WvnWf9qPTwzCLwrdFc8Frlen4Cq0n7UQP+q8LN/wACuP8AAV3rLcU+n4nmvNcGvtfgfSmB/dozivmRv2orvovhaL8bg/4V6B8GvjLb/EDVJtJm0trG8jj8xcSblcd+2Qairl+IpRcpLRGlHMsPVkoQlqz12iiiuI9Eaa5P4v3v9n/DbXrrOCtm6g+5GK6w15d+09e/ZPhHqKg4MzJGPfLc1tho81aK80c2Lly0ZS7JnxQTk5pKKK+7R+dsKKKKYgooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigBV617b+x1d+R8Rru1J4nsm/NWB/rXiQ+9Xp/wCzBdG1+LumrnAmSSM/iuf6Vx42PNQmvI7cvly4mD80fbdFAor4k/QRO1cP8b/ENx4Z+G2q6naTNDdBAkMi9VZjgEe9dv1rzP8AaaiEvwg1XP8AAUb8mrbDRUq0U9ro5sXKUaEnHdJnxnquu65q0hk1TWL++Zjkm4uGf+ZqgSx6k02jFfcxpxirJH59KpKTu2Ga9q/ZBuLpPiXNbpM6wSWbmVM/K2CMZHtXite4fscx7viHeyY+7ZfzNceYJfV5eh2ZbJ/WYep9dVx/xmtVu/hjr8LDP+iM34jmuwrj/jNdpZfDDX5pDgG0ZRn1PAr5Ghf2sbd0fbYi3spX7M+Bu9Bo70GvvEfnT3Er2v8AZAh3/EmeT+5aN+pFeKdq99/Yyg3eLdVuMfctgv61xZi7YeXod2WRvioep9XUUUV8WffiV4V+2PeeV4EsrQHma7BI9gDXutfNX7al3kaFYg93kI/IV25dHmxMTzc0ly4WR81UUUV9qfBhRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAo613PwGmMHxa0Fx3uNv5qRXDCul+Ft0LL4h6Hck4C3keT7E4rHER5qcl5M6MM+WrF+aP0FHSimxsCgI7jNOr4M/RUNHSvM/2mpPL+EGrf7RQf8Ajwr00V5R+1U5T4RXvvPGP1NdGDV68fVHLjnahP0Z8WUUUV9yj88DtXv37F8O7xXrU/8ActEX/wAeNeA9q+k/2KLf954husdokz+Zrz8zdsNI9PKFzYqJ9L9s15T+1Ncm3+Et6qnHmyxofpmvVu1eQ/tZgn4VSn0uY/518xgVevFPufX492w8rdj4zooor7g/PQNfSv7Fdt/yHbvH9xM/ma+a+xr6t/Yzttng/VLoj/WXQXP0FeZmsrYd+Z62TR5sVHyue+0UUV8gfcCHqK+Tf2yrov41022zxHa5x9TX1ka+M/2s7gy/FSSPPEVsi/nzXqZPG+Iv2TPGzuVsM13Z5DRRRX1x8UFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFACr1qxpU7Wup2twpwY5VcH6EGqw60oODkVMldWLjK0rn6M+HrlbzQrK7U5EsCPn6qKv1x3wUvf7Q+GOhzk5P2ZVP4cV2VfB1o8tRrs2fotCXPTjLukJXk/7VqlvhHeEfw3ER/U16zXnP7R9mbz4RayqjJjVZPyYVphHatB+aM8bHmoTS7Hw3RRRX3J+dhX1f8AsY2nleDdVvCP9feAA+u1a+UB0FfbX7MelSaV8JdPEsZR7p3nIPBwx4/QV5Ocz5aFu7PbyOF8Tfsj1DNeSftXlR8JrnPeePH5160a4T43+EL3xn4CutI06SNbwMskQc7Vcj+Entn1r5vCSUK8ZSdkmfUYyEp0JRirto+EuKMV6FL8FfiZHIVPhidiDjKyxsPwIaon+DvxKRufCl4foyn+Rr7L63Rf21958M8HXX2H9xwQH+1X2P8Ask26xfC1JV6y3Lsfw4rwGw+BnxLvJFA8O/Z1J5ee4jUL7kZz+QNfVnwe8HyeCPBFrolxcJNcKS8zJnbuPJAz2968nN8TSnRUIyTd+h7WS4WrCs5Si0rdUdrRRRXzh9UNPevir9qRifi5fZ7RRj9K+1T3r4k/abkEvxe1MA52Ki/pXr5Mv3/yPDz5/uPmeY0UUV9WfGhRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAfZ/7Kl99r+FVrETk28zx/hnNetYxXz5+xdf+Z4d1jT2PMVwHA9iK+gwTXxGPjy15LzP0DLZ8+Gg/IU1n6/pdrrGkXWmXi7re5jMbgdcEY4rRorkTad0dkoqSsz5zm/Zf083TtH4ouVgLEqpt1LAemc4/StGx/Zk8LR4N1req3B7gbVH6CveaPpXa8yxD05jhWV4a9+RHkmj/s+/D7T7tLiS2u7woQQs0xKk+4HWvVbSCG1t0t7eNYoo1CoijAUDoAKmHvS/SuarXqVrc7bOmjh6VH4EkLRRRWZuFFFFABRRRQAUUUUAIehr4O+PVz9q+LGuvnIW42D8AK+75DhWPoK/Pn4lXH2rx9rlxnO+9k/9Cx/SvbyOP7yT8j57P5WpRXmc7RRRX058kFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB75+xjf8Al+LtW08nie1Dge6tzX1djmvir9lm9+x/FyxjJwLiGSL6kjI/lX2pmvkc4jy4i/dH2uRz5sNbsx1FFFeWeyFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAV75tlpO57Rsf0NfnX4ikM/iDUJT/FcyN+bGv0N19tmh3zf3beQ/wDjpr86r5i97Ox/ikY/qa+gyJfE/Q+Z4hl8CIKKKK+iPlwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAOt+D962n/E3w/dL2vEQ/Rjj+tffanKg+tfAHwputJsviFot7rU3kWEFyJJJMZCkdCfbOM1936VrWk6pbpPp2o2l1GwypilVv5Gvmc7i3Ui0uh9XkE0qck31NPNGaTcvrS5HrXhn0V0FFFFAwooyKMj1oFcKKMj1oyPWgLhmjNGR60m5fUUBdCUuaytR8Q6Bp+Rf61p1qR1EtyqH8iaxLr4m+AbYkS+KtNBH92Xd/KrjSqS2TfyMpV6cd5L7zr6K8/ufjN8NoQc+KbVyOyKxP8qwdT/aG+HtoCILi+vGHaK3IH5nFaxwlaW0H9xlLG0FvNfeeheOr6PTvB2sXkx2xxWcjE/8BNfnrI2+Qv8A3iT+dfTPxZ+NHhPxP8L9Q0/SZ7iPULvEXkSRkMBnkk9MYr5k7V9Dk+HlShJzVm2fM53iYVpx5GmkhKKKK9k8IKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAqSOeeP8A1c0iY/uuR/Ko6KlxT3HGTWxtWHivxNYY+w+INVtsdPKunX+Rrcs/it8RrTAi8X6m2P8AnrJ5n/oQNcVmjmsnh6Ut4p/I2jiasdpNfM9Gj+OPxSQYHilz/vWVuf5pTZvjd8UJRhvFUo/3bWBf5JXnYJoyan6pQ35F9xf12vtzv7ztZviz8R5jl/F2pj/ckC/yFQ/8LO+IWc/8JjrH/gS3+Nchk0c0/qtFfZX3ITxVZ/bf3nZL8U/iKvTxfqv4zE/zp3/C1viPjH/CX6n/AN/f/rVxfNHNH1Wj/KvuQfW6387+866b4nfEGUYbxhrIz/dumX+RrKv/ABZ4nvwVvvEWq3IPUS3jt/M1jYNH41UcPSjtFfcTLE1HvJv5j5JJZDmSR3P+0Sf51HRRWlkYuTCiiimIKKKKYBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH//2Q=="
+          alt="Logo Cosan" class="logo-img">
+        <div>
+          <h1>Cosan Coffee</h1>
+          <p class="sub-title">Barista Recipe Master</p>
+        </div>
+      </div>
+      <div class="user-stats-card">
+        <div class="level-badge" id="userLevelBadge">Lvl 1</div>
+        <div class="xp-bar-container">
+          <div class="xp-bar-label" id="userXpText">0 / 500 XP</div>
+          <div class="xp-track">
+            <div class="xp-fill" id="userXpFill"></div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="tab-bar" id="tabs"></div>
+
+    <div class="mode-bar">
+      <button class="mode-btn active" onclick="setMode('flashcard')">Flashcard</button>
+      <button class="mode-btn" onclick="setMode('quiz')">Kuis</button>
+      <button class="mode-btn" onclick="setMode('swipe')">Swipe T/F</button>
+      <button class="mode-btn" onclick="setMode('simulator')">Simulator</button>
+      <button class="mode-btn" onclick="setMode('statistik')">Statistik</button>
+      <button class="mode-btn" onclick="setMode('browse')">Lihat semua</button>
+    </div>
+
+    <div id="content"></div>
+  </div>
+
+  <script>
+    var menus = {
+      "Cosan Spesial": [
+        { name: "Palma Reguler", ingr: [["Espresso Strong", "30g"], ["Magic Milk", "120g"], ["Palm Suiker powder", "10g"], ["Susu Kental Manis", "10g"]] },
+        { name: "Palma Large", ingr: [["Espresso Strong", "51g"], ["Magic Milk", "170g"], ["Palm Suiker powder", "15g"], ["Susu Kental Manis", "15g"]] },
+        { name: "Palma Hot", ingr: [["Espresso Strong", "30g"], ["Magic Milk", "180g"], ["Palm Suiker powder", "8g"]] },
+        { name: "Cosan Bold Reguler", ingr: [["Espresso Strong", "30g"], ["Magic Milk", "120g"], ["Susu Kental Manis", "12g"], ["Simsy", "8g"]] },
+        { name: "Cosan Bold Large", ingr: [["Espresso Strong", "51g"], ["Magic Milk", "170g"], ["Susu Kental Manis", "17g"], ["Simsy", "12g"]] },
+        { name: "Himalaya", ingr: [["Espresso Strong", "30g"], ["Magic Milk", "120g"], ["Salted Caramel Sauce", "30g"]] },
+        { name: "Creamy Latte", ingr: [["Espresso Strong", "20g"], ["Magic Milk", "140g"], ["Maple Syrup", "15g"], ["F&N Evaporasi", "20g"]] }
+      ],
+      "Cosan Milk Based": [
+        { name: "Iced Cosan", ingr: [["Espresso Lite", "30g"], ["Magic Milk", "140g"], ["Susu Kental Manis", "20g"]] },
+        { name: "Palma Lite", ingr: [["Espresso Lite", "25g"], ["Magic Milk", "140g"], ["Palm Suiker powder", "13g"]] },
+        { name: "Latte Valencia", ingr: [["Espresso Lite", "25g"], ["Magic Milk", "140g"], ["Honey Citron", "20g"], ["Simsy", "5g"]] },
+        { name: "Sado Latte / Dirty Latte", ingr: [["Espresso Lite", "25g"], ["Magic Milk", "140g"], ["Matcha Powder", "50g"]] },
+        { name: "Rosemary Latte", ingr: [["Espresso Lite", "25g"], ["Magic Milk", "140g"], ["Syrup Rosemary", "25g"]] },
+        { name: "Rum Latte", ingr: [["Espresso Strong", "30g"], ["Magic Milk", "120g"], ["Rum Syrup", "20g"]] },
+        { name: "Latte Valencia Arabica", ingr: [["Espresso Arabica", "20g"], ["Fresh Milk", "140g"], ["Simsy", "15g"], ["Parutan Sunkist di atas fresh milk lalu espresso", ""]] }
+      ],
+      "Mocktail Coffee": [
+        { name: "Space Jam", ingr: [["Espresso Lite", "25g"], ["Sprite", "110g"], ["Cranberry Syrup", "20g"], ["Cranberry Garnish", "1 pcs"]] },
+        { name: "Kaffee Tonic", ingr: [["Espresso Arabica", "20g"], ["Schweppes", "180g"], ["Lemon Garnish", "1 pcs"]] },
+        { name: "Atlanta", ingr: [["Espresso Lite", "25g"], ["Coke", "150g"], ["Simsy", "10g"], ["Lemon Syrup", "10g"]] },
+        { name: "Frozen Yuzu", ingr: [["Espresso Lite", "25g"], ["Ice Blender", "145g"], ["Air", "45g"], ["Honey Citron", "25g"], ["Lemon Syrup", "10g"], ["Simsy", "25g"]] },
+        { name: "Chilled Honey Ginger", ingr: [["Espresso Lite", "25g"], ["Ice Blender", "145g"], ["Air", "45g"], ["Honey Ginger", "25g"], ["Lemon Syrup", "10g"], ["Simsy", "25g"]] },
+        { name: "Rosemary Tonic", ingr: [["Espresso Arabica", "20g"], ["Air Soda", "125g"], ["Rosemary Syrup", "25g"], ["Lemon Syrup", "5g"]] },
+        { name: "Mont Blanc", ingr: [["Cold Brew", "100g"], ["Palm Suiker powder", "7g"], ["Orange Bitter Syrup", "7g"], ["Whipped Cream", "35g"], ["Parutan Orange Peel + Coffee Grind", ""]] },
+        { name: "Coco Capp", ingr: [["Coconut Water", "110g"], ["Coconut Syrup", "10g"], ["Whipped Cream", "35g"], ["Espresso Lite", "15g"], ["Coconut Syrup (extra)", "5g"]] },
+        { name: "Americano Peach", ingr: [["Espresso Lite", "20g"], ["Water", "120g"], ["Peach Syrup", "25g"], ["Condy Lemon", "5g"]] }
+      ],
+      "Cosan Basic Coffee": [
+        { name: "Latte Ice", ingr: [["Espresso Arabica", "25g"], ["Fresh Milk", "120g"]] },
+        { name: "Latte Hot", ingr: [["Espresso Arabica", "25g"], ["Fresh Milk", "180g"]] },
+        { name: "Black Ice", ingr: [["Espresso Arabica", "30g"], ["Air", "120g"]] },
+        { name: "Black Hot", ingr: [["Espresso Arabica", "30g"], ["Air Panas", "200g"]] },
+        { name: "Oat Latte Ice", ingr: [["Espresso Arabica", "25g"], ["Oatside", "120g"]] },
+        { name: "Oat Latte Hot", ingr: [["Espresso Arabica", "25g"], ["Oatside", "180g"]] },
+        { name: "Cappucino Ice", ingr: [["Espresso Arabica", "30g"], ["Fresh Milk", "120g"]] },
+        { name: "Cappucino Hot", ingr: [["Espresso Arabica", "30g"], ["Fresh Milk", "180g"]] }
+      ],
+      "Non Coffee": [
+        { name: "Matcha Latte Ice", ingr: [["Magic Milk", "140g"], ["Matcha Sauce", "50g"]] },
+        { name: "Matcha Latte Hot", ingr: [["Magic Milk", "180g"], ["Matcha Sauce", "25g"]] },
+        { name: "Redvelvet Ice", ingr: [["Magic Milk", "140g"], ["Redvelvet Sauce", "40g"]] },
+        { name: "Redvelvet Hot", ingr: [["Magic Milk", "180g"], ["Redvelvet Sauce", "20g"]] },
+        { name: "Monks Latte", ingr: [["Magic Milk", "140g"], ["Coklat Sauce", "10g"], ["Maple", "15g"], ["Banana Syrup", "10g"]] },
+        { name: "Monks Latte Hot", ingr: [["Magic Milk", "180g"], ["Coklat Sauce", "7g"], ["Maple", "10g"], ["Banana Syrup", "5g"]] },
+        { name: "Cookie Monster", ingr: [["Magic Milk", "140g"], ["Biscoff Jam", "20g"], ["Biscoff Biscuit", "25g"]] },
+        { name: "Sakura Lemonade", ingr: [["Soda Water", "125g"], ["Dripp Sakura", "20g"], ["Lemon Syrup", "5g"], ["Lemon Garnish", "1 pcs"]] },
+        { name: "Sparkling Yuzu", ingr: [["Soda Water", "125g"], ["Citron Honey", "20g"], ["Simsy", "10g"], ["Sunkist Garnish", "1 pcs"]] },
+        { name: "Coffee Cherry Fizz", ingr: [["Soda Water", "125g"], ["Cascara", "110g"]] },
+        { name: "Soap Disco", ingr: [["Black Tea", "100g"], ["Strawberry Sauce", "20g"], ["Whipped Cream", "35g"], ["Lavender Syrup", "10g"], ["Dripp Coconut", "5g"]] },
+        { name: "Choco Craze", ingr: [["Magic Milk", "140g"], ["Coklat Sauce", "40g"], ["Maple", "15g"]] }
+      ],
+      "Cosan Tea": [
+        { name: "Lychee Tea", ingr: [["Black Tea", "120g"], ["Lychee Syrup", "20g"], ["Mint Syrup", "10g"], ["Buah Lychee", "2 pcs"]] },
+        { name: "Ice Tea", ingr: [["Black Tea", "150g"], ["Simsy", "10g"]] },
+        { name: "Special Tea", ingr: [["Tea Bag", "1 pcs"], ["Hot Water", "200g"], ["Sugar", "1 stick"]] }
+      ],
+      "Half Product": [
+        { name: "COLD BREW", ingr: [["BEANS FULL ARABICA", "100g"], ["AIR PANAS", "200ml"], ["AIR DINGIN", "1100ml"]] },
+        { name: "COCONUT WATER", ingr: [["HYDRO COCO", "1000ml"], ["DRIPP COCONUT", "100ml"]] },
+        { name: "CHAMOMILE TEA", ingr: [["CHAMOMILE TEA", "4 bag"], ["AIR PANAS", "400ml"], ["AIR DINGIN", "2100ml"]] },
+        { name: "BLACK TEA HOT", ingr: [["ENGLISH BREAKFAST DILMAH", "1 bag"], ["HOT WATER", "200ml"]] },
+        { name: "BLACK TEA ICE", ingr: [["ENGLISH BREAKFAST", "1 bag"], ["AIR DINGIN", "400ml"]] },
+        { name: "ESPRESSO ARABICA", ingr: [["Arabica", "20g"], ["Yield", "25g"]] },
+        { name: "WHIPED CREAM", ingr: [["PRESIDENT WC", "300g"], ["FRESH MILK", "100g"]] },
+        { name: "HALF COLD BREW MONT BLANC", ingr: [["COLD BREW", "1000g"], ["GIFFARD ORANGE", "70g"], ["PALM SUIKER", "70g"]] },
+        { name: "BISCOFF JAM", ingr: [["BISCOFF SPREAD CRUNCY", "380g"], ["AIR PANAS", "420ml"]] },
+        { name: "SIMSY", ingr: [["GULA PASIR", "1000g"], ["AIR", "750g"]] },
+        { name: "ESPRESSO STRONG", ingr: [["Beans 70 30", "20g"], ["Yield", "30g"]] },
+        { name: "MAGIC MILK", ingr: [["UHT MILK", "1000g"], ["CREAMER", "500g"], ["AIR PANAS", "350g"]] },
+        { name: "MATCHA SAUCE", ingr: [["ARNAV MATCHA", "25g"], ["AIR PANAS", "25g"]] },
+        { name: "RED VELVET SAUCE", ingr: [["DRIPP RED VELVET", "17g"], ["DRIPP CREAM CHESSE", "3g"], ["AIR PANAS", "20g"]] },
+        { name: "MONKS SAUCE", ingr: [["CHOCO BANANA", "25g"], ["AIR PANAS", "25g"]] },
+        { name: "ESPRESSO LITE", ingr: [["Beans 70 30", "18g"], ["Yield", "50g"]] }
+      ]
+    };
+
+    var cats = ["Semua"].concat(Object.keys(menus));
+    var activeCat = cats[0];
+    var mode = "flashcard";
+    var cardIndex = 0;
+    var flipped = false;
+    var quizScore = 0;
+    var quizTotal = 0;
+    var quizAnswered = false;
+    var shuffled = [];
+    var playerXP = 0;
+    var mastery = {};
+    var currentQuestion = null;
+    var currentStatFilter = "all";
+
+    // Simulator State
+    var simTarget = null;
+    var simScale = 0.0;
+    var simTareValue = 0.0;
+    var simAddedIngredients = [];
+    var simActiveTab = "Kopi";
+    var simActiveIngredient = null;
+    var simUseHint = false;
+    var numPadValue = "0";
+
+    function getLevel(xp) {
+      return Math.floor(xp / 500) + 1;
+    }
+
+    function getAccuracy() {
+      return quizTotal ? Math.round((quizScore / quizTotal) * 100) : 0;
+    }
+
+    function shuffle(arr) {
+      var a = arr.slice();
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
+    }
+
+    function esc(s) {
+      return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    function loadProgress() {
+      var storedXP = localStorage.getItem("cosan_xp");
+      var storedMastery = localStorage.getItem("cosan_mastery");
+      if (storedXP) {
+        playerXP = parseInt(storedXP);
+      }
+      if (storedMastery) {
+        try {
+          mastery = JSON.parse(storedMastery);
+        } catch (e) { }
+      }
+      updateStatsHeader();
+    }
+
+    function saveProgress() {
+      localStorage.setItem("cosan_xp", playerXP);
+      localStorage.setItem("cosan_mastery", JSON.stringify(mastery));
+    }
+
+    function updateStatsHeader() {
+      var lvl = getLevel(playerXP);
+      var currentXpInLvl = playerXP % 500;
+      var progressPercent = (currentXpInLvl / 500) * 100;
+
+      var lvlBadge = document.getElementById("userLevelBadge");
+      var xpText = document.getElementById("userXpText");
+      var xpFill = document.getElementById("userXpFill");
+
+      if (lvlBadge) lvlBadge.textContent = "Lvl " + lvl;
+      if (xpText) xpText.textContent = currentXpInLvl + " / 500 XP";
+      if (xpFill) xpFill.style.width = progressPercent + "%";
+    }
+
+    function rewardXP(amt) {
+      playerXP += amt;
+      saveProgress();
+      updateStatsHeader();
+    }
+
+    function getActiveMenuItems() {
+      if (activeCat === "Semua") {
+        var all = [];
+        for (var k in menus) {
+          all = all.concat(menus[k]);
+        }
+        return all;
+      }
+      return menus[activeCat];
+    }
+
+    function getCategoryOfRecipe(recipeName) {
+      for (var cat in menus) {
+        var found = menus[cat].some(function (item) {
+          return item.name === recipeName;
+        });
+        if (found) return cat;
+      }
+      return activeCat;
+    }
+
+    function adjustMastery(name, amount) {
+      if (mastery[name] === undefined) {
+        mastery[name] = 0;
+      }
+      mastery[name] = Math.max(0, Math.min(5, mastery[name] + amount));
+      saveProgress();
+    }
+
+    function calculateStats() {
+      var total = 0;
+      var mastered = 0;
+      var learning = 0;
+      var struggling = 0;
+      var unseen = 0;
+
+      var categoryStats = {};
+
+      for (var cat in menus) {
+        var catTotal = menus[cat].length;
+        var catMastered = 0;
+
+        menus[cat].forEach(function (item) {
+          total++;
+          var lvl = mastery[item.name] || 0;
+          if (lvl === 5) {
+            mastered++;
+            catMastered++;
+          } else if (lvl >= 3) {
+            learning++;
+          } else if (lvl >= 1) {
+            struggling++;
+          } else {
+            unseen++;
+          }
+        });
+
+        categoryStats[cat] = {
+          total: catTotal,
+          mastered: catMastered,
+          percent: Math.round((catMastered / catTotal) * 100)
+        };
+      }
+
+      return {
+        total: total,
+        mastered: mastered,
+        learning: learning,
+        struggling: struggling,
+        unseen: unseen,
+        categoryStats: categoryStats
+      };
+    }
+
+    function setStatFilter(filterId) {
+      currentStatFilter = filterId;
+      render();
+    }
+
+    function quickBrewRecipe(category, recipeName) {
+      var catIdx = cats.indexOf(category);
+      if (catIdx !== -1) {
+        activeCat = category;
+        renderTabs();
+      }
+
+      var items = menus[category] || [];
+      var recipeIdx = -1;
+      for (var i = 0; i < items.length; i++) {
+        if (items[i].name === recipeName) {
+          recipeIdx = i;
+          break;
+        }
+      }
+
+      if (recipeIdx !== -1) {
+        mode = "simulator";
+        var container = document.getElementById("appContainer");
+        if (container) container.classList.add("wide");
+
+        var btns = document.querySelectorAll(".mode-btn");
+        var modes = ["flashcard", "quiz", "swipe", "simulator", "statistik", "browse"];
+        for (var i = 0; i < btns.length; i++) {
+          btns[i].classList.toggle("active", modes[i] === "simulator");
+        }
+
+        startSimulation(recipeIdx);
+      }
+    }
+
+    function setMode(m) {
+      mode = m;
+      cardIndex = 0;
+      flipped = false;
+      quizScore = 0;
+      quizTotal = 0;
+      quizAnswered = false;
+      simTarget = null;
+
+      var container = document.getElementById("appContainer");
+      if (container) {
+        if (m === "simulator") {
+          container.classList.add("wide");
+        } else {
+          container.classList.remove("wide");
+        }
+      }
+
+      shuffled = shuffle(getActiveMenuItems());
+      var btns = document.querySelectorAll(".mode-btn");
+      var modes = ["flashcard", "quiz", "swipe", "simulator", "statistik", "browse"];
+      for (var i = 0; i < btns.length; i++) {
+        btns[i].classList.toggle("active", modes[i] === m);
+      }
+      if (m === "swipe") {
+        generateSwipeQuestion();
+      }
+      render();
+    }
+
+    function setTab(idx) {
+      activeCat = cats[idx];
+      cardIndex = 0;
+      flipped = false;
+      quizScore = 0;
+      quizTotal = 0;
+      quizAnswered = false;
+      simTarget = null;
+      shuffled = shuffle(getActiveMenuItems());
+      if (mode === "swipe") {
+        generateSwipeQuestion();
+      }
+      renderTabs();
+      render();
+    }
+
+    var currentSwipeQuestion = null;
+
+    function generateSwipeQuestion() {
+      var items = getActiveMenuItems();
+      if (!shuffled.length) shuffled = shuffle(items);
+      var item = shuffled[cardIndex % shuffled.length];
+      if (!item) return;
+
+      var isTrue = Math.random() < 0.5;
+      var statement = "";
+      var chosenIngr = item.ingr[Math.floor(Math.random() * item.ingr.length)];
+      var ingrName = chosenIngr[0];
+      var ingrAmt = chosenIngr[1] || "secukupnya";
+
+      if (isTrue) {
+        var qType = Math.floor(Math.random() * 3);
+        if (qType === 0) {
+          statement = "Resep <strong>" + esc(item.name) + "</strong> menggunakan <strong>" + esc(ingrName) + "</strong> sebanyak <strong>" + esc(ingrAmt) + "</strong>.";
+        } else if (qType === 1) {
+          statement = "Salah satu bahan dari <strong>" + esc(item.name) + "</strong> adalah <strong>" + esc(ingrName) + "</strong>.";
+        } else {
+          var ingListStr = item.ingr.slice(0, 4).map(function (ing) { return esc(ing[0]); }).join(", ");
+          statement = "Bahan-bahan untuk membuat <strong>" + esc(item.name) + "</strong> terdiri dari <strong>" + ingListStr + "</strong>.";
+        }
+      } else {
+        var qType = Math.floor(Math.random() * 3);
+        if (qType === 0) {
+          var fakeAmt = ingrAmt;
+          if (ingrAmt.endsWith("g")) {
+            var actualVal = parseInt(ingrAmt);
+            var offset = (Math.random() < 0.5 ? 1 : -1) * (Math.floor(Math.random() * 3) + 1) * 5;
+            if (actualVal === 51) {
+              offset = (Math.random() < 0.5 ? 9 : -11);
+            }
+            var fakeVal = Math.max(5, actualVal + offset);
+            if (fakeVal === actualVal) fakeVal += 5;
+            fakeAmt = fakeVal + "g";
+          } else if (ingrAmt.includes("pcs")) {
+            var actualVal = parseInt(ingrAmt);
+            var fakeVal = actualVal + 1;
+            fakeAmt = fakeVal + " pcs";
+          } else {
+            fakeAmt = "15g";
+          }
+          statement = "Resep <strong>" + esc(item.name) + "</strong> menggunakan <strong>" + esc(ingrName) + "</strong> sebanyak <strong>" + esc(fakeAmt) + "</strong>.";
+        } else if (qType === 1) {
+          var allFlat = [];
+          for (var k in menus) allFlat = allFlat.concat(menus[k]);
+          var pool = [];
+          allFlat.forEach(function (menu) {
+            menu.ingr.forEach(function (ing) {
+              var isCurrent = ing[0] === ingrName || item.ingr.some(function (i) { return i[0] === ing[0]; });
+              if (!isCurrent && pool.indexOf(ing[0]) === -1) {
+                pool.push(ing[0]);
+              }
+            });
+          });
+          var fakeIngr = pool.length > 0 ? pool[Math.floor(Math.random() * pool.length)] : "Fresh Milk";
+          statement = "Salah satu bahan dari <strong>" + esc(item.name) + "</strong> adalah <strong>" + esc(fakeIngr) + "</strong>.";
+        } else {
+          statement = "Resep <strong>" + esc(item.name) + "</strong> <strong>tidak</strong> menggunakan <strong>" + esc(ingrName) + "</strong>.";
+        }
+      }
+
+      currentSwipeQuestion = {
+        recipeName: item.name,
+        statement: statement,
+        isTrue: isTrue
+      };
+    }
+
+    function renderTabs() {
+      var html = "";
+      for (var i = 0; i < cats.length; i++) {
+        var c = cats[i];
+        html += '<button class="tab' + (c === activeCat ? " active" : "") + '" onclick="setTab(' + i + ')">' + esc(c) + "</button>";
+      }
+      document.getElementById("tabs").innerHTML = html;
+    }
+
+    function ingrRows(ingr) {
+      var html = "";
+      for (var i = 0; i < ingr.length; i++) {
+        html += "<li><span>" + esc(ingr[i][0]) + "</span><span class='ingr-amt'>" + esc(ingr[i][1] || 'secukupnya') + "</span></li>";
+      }
+      return html;
+    }
+
+    // Extract and categorize ingredients dynamically
+    function getCategoriesOfIngredients() {
+      var kopi = [];
+      var susu = [];
+      var manis = [];
+      var lainnya = [];
+
+      for (var cat in menus) {
+        menus[cat].forEach(function (item) {
+          item.ingr.forEach(function (ing) {
+            var name = ing[0];
+            var lower = name.toLowerCase();
+            if (lower.includes("espresso") || lower.includes("cold brew") || lower.includes("kopi") || lower.includes("coffee") || lower.includes("black")) {
+              if (!kopi.includes(name)) kopi.push(name);
+            } else if (lower.includes("milk") || lower.includes("susu") || lower.includes("oatside") || lower.includes("evaporasi") || lower.includes("cream")) {
+              if (!susu.includes(name)) susu.push(name);
+            } else if (lower.includes("syrup") || lower.includes("sirup") || lower.includes("suiker") || lower.includes("honey") || lower.includes("citron") || lower.includes("ginger") || lower.includes("cascara") || lower.includes("maple") || lower.includes("simsy") || lower.includes("sauce") || lower.includes("saus") || lower.includes("jam") || lower.includes("selai") || lower.includes("coklat")) {
+              if (!manis.includes(name)) manis.push(name);
+            } else {
+              if (!lainnya.includes(name)) lainnya.push(name);
+            }
+          });
+        });
+      }
+      return { "Kopi": kopi, "Susu": susu, "Gula/Sirup": manis, "Lainnya/Garnish": lainnya };
+    }
+
+    function getIngredientColor(name) {
+      var lower = name.toLowerCase();
+      if (lower.includes("espresso") || lower.includes("cold brew") || lower.includes("black")) return "#3A2218";
+      if (lower.includes("fresh milk")) return "#FFFDF2";
+      if (lower.includes("magic milk")) return "#FDF9EA";
+      if (lower.includes("oatside")) return "#E8DFD0";
+      if (lower.includes("evaporasi")) return "#F2EADB";
+      if (lower.includes("matcha")) return "#5B8B3B";
+      if (lower.includes("redvelvet") || lower.includes("cranberry") || lower.includes("sakura")) return "#A82B2B";
+      if (lower.includes("palm suiker") || lower.includes("caramel") || lower.includes("coklat") || lower.includes("cocoa")) return "#7B4F30";
+      if (lower.includes("syrup") || lower.includes("sirup") || lower.includes("simsy") || lower.includes("honey") || lower.includes("madu") || lower.includes("maple")) return "#E0A93C";
+      if (lower.includes("soda") || lower.includes("sprite") || lower.includes("schweppes") || lower.includes("air") || lower.includes("water")) return "#E0F2FE";
+      if (lower.includes("coke")) return "#221111";
+      if (lower.includes("tea") || lower.includes("teh")) return "#BE7442";
+      return "#94A3B8";
+    }
+
+    function render() {
+      var el = document.getElementById("content");
+      var items = getActiveMenuItems();
+      if (!shuffled.length) shuffled = shuffle(items);
+      var html = "";
+
+      if (mode === "flashcard") {
+        var item = shuffled[cardIndex % shuffled.length];
+        html = '<div class="card-wrap" onclick="flipCard()">'
+          + '<div class="card-inner' + (flipped ? " flipped" : "") + '" id="cardInner">'
+          + '<div class="card-face card-front">'
+          + '<div class="card-label">nama minuman</div>'
+          + '<div class="card-name">' + esc(item.name) + '</div>'
+          + '<div class="card-cat">' + esc(getCategoryOfRecipe(item.name)) + '</div>'
+          + '</div>'
+          + '<div class="card-face card-back">'
+          + '<div class="card-label" style="margin-bottom:0.75rem">bahan-bahan</div>'
+          + '<ul class="ingr-list">' + ingrRows(item.ingr) + '</ul>'
+          + '</div></div></div>'
+          + '<p class="hint">Klik kartu untuk membalik &nbsp;&middot;&nbsp; ' + shuffled.length + ' minuman di kategori ini</p>'
+          + '<div class="nav">'
+          + '<button class="nav-btn" onclick="prevCard()"' + (cardIndex === 0 ? " disabled" : "") + '>&larr; Sebelumnya</button>'
+          + '<span class="counter">' + (cardIndex + 1) + ' / ' + shuffled.length + '</span>'
+          + '<button class="nav-btn" onclick="nextCard()">Berikutnya &rarr;</button>'
+          + '</div>';
+
+      } else if (mode === "quiz") {
+        var allFlat = [];
+        for (var k in menus) allFlat = allFlat.concat(menus[k]);
+
+        var item = shuffled[cardIndex % shuffled.length];
+        var qType = Math.floor(Math.random() * 3);
+
+        html = '<div class="score-bar">Akurasi: ' + getAccuracy() + '% (' + quizScore + '/' + quizTotal + ' Soal)</div>';
+
+        if (qType === 0) {
+          var hiddenIndex = Math.floor(Math.random() * item.ingr.length);
+          var correct = item.ingr[hiddenIndex][0];
+
+          var ingredientHtml = '';
+          for (var h = 0; h < item.ingr.length; h++) {
+            if (h === hiddenIndex) {
+              ingredientHtml += "<li><span>???</span><span class='ingr-amt'>?</span></li>";
+            } else {
+              ingredientHtml += "<li><span>" + esc(item.ingr[h][0]) + "</span><span class='ingr-amt'>" + esc(item.ingr[h][1] || 'secukupnya') + "</span></li>";
+            }
+          }
+
+          var pool = [];
+          for (var a = 0; a < allFlat.length; a++) {
+            for (var b = 0; b < allFlat[a].ingr.length; b++) {
+              var ing = allFlat[a].ingr[b][0];
+              if (ing !== correct && pool.indexOf(ing) === -1) pool.push(ing);
+            }
+          }
+
+          var opts = shuffle([correct].concat(shuffle(pool).slice(0, 3)));
+          currentQuestion = { correct: correct };
+          window._quizOpts = opts;
+
+          html += '<div class="detail-box">'
+            + '<div class="card-label">Bahan yang hilang?</div>'
+            + '<div class="card-name" style="font-size:20px;text-align:left">' + esc(item.name) + '</div>'
+            + '<ul class="ingr-list">' + ingredientHtml + '</ul>'
+            + '</div>';
+        }
+        else if (qType === 1) {
+          var ing = item.ingr[Math.floor(Math.random() * item.ingr.length)];
+          var correct = ing[1] || 'secukupnya';
+
+          var nums = [5, 7, 8, 10, 12, 15, 17, 20, 25, 30, 35, 40, 45, 50, 51, 100, 110, 120, 125, 140, 145, 150, 170, 180, 200];
+          var opts = [correct];
+          while (opts.length < 4) {
+            var n = nums[Math.floor(Math.random() * nums.length)] + 'g';
+            if (opts.indexOf(n) === -1) opts.push(n);
+          }
+          opts = shuffle(opts);
+          currentQuestion = { correct: correct };
+          window._quizOpts = opts;
+
+          html += '<div class="detail-box">'
+            + '<div class="card-label">Berapa takarannya?</div>'
+            + '<div class="card-name" style="font-size:18px;text-align:left">' + esc(ing[0]) + ' pada ' + esc(item.name) + '</div>'
+            + '</div>';
+        }
+        else {
+          var correct = item.name;
+          var recipe = '';
+          for (var r = 0; r < item.ingr.length; r++) {
+            recipe += '<li><span>' + esc(item.ingr[r][0]) + '</span><span class="ingr-amt">' + esc(item.ingr[r][1] || 'secukupnya') + '</span></li>';
+          }
+
+          var names = [];
+          for (var n = 0; n < allFlat.length; n++) {
+            if (allFlat[n].name !== correct) names.push(allFlat[n].name);
+          }
+          var opts = shuffle([correct].concat(shuffle(names).slice(0, 3)));
+          currentQuestion = { correct: correct };
+          window._quizOpts = opts;
+
+          html += '<div class="detail-box">'
+            + '<div class="card-label">Menu apakah ini?</div>'
+            + '<ul class="ingr-list">' + recipe + '</ul>'
+            + '</div>';
+        }
+
+        for (var i = 0; i < window._quizOpts.length; i++) {
+          html += '<button class="quiz-opt" onclick="answerQuiz(' + i + ',this)">' + esc(window._quizOpts[i]) + '</button>';
+        }
+
+        html += '<div class="nav" style="margin-top:1rem"><span class="counter">Soal ' + (cardIndex + 1) + ' / ' + shuffled.length + '</span></div>';
+      }
+
+      else if (mode === "swipe") {
+        if (!currentSwipeQuestion) {
+          generateSwipeQuestion();
+        }
+        var item = currentSwipeQuestion;
+
+        html = '<div class="score-bar">Akurasi: ' + getAccuracy() + '% (' + quizScore + '/' + quizTotal + ' Soal)</div>';
+
+        html += '<div class="swipe-container">'
+          + '<div class="swipe-card-wrapper">'
+          + '<div class="swipe-badge badge-true" id="badgeTrue">BENAR</div>'
+          + '<div class="swipe-badge badge-false" id="badgeFalse">SALAH</div>'
+          + '<div class="swipe-card" id="swipeCard">'
+          + '<div class="card-label" style="color:var(--primary); font-size:12px; margin-bottom:1rem;">Swipe True or False</div>'
+          + '<div class="card-name" style="font-size:20px; font-weight:700; margin-bottom:1.5rem; text-align:center;">' + esc(item.recipeName) + '</div>'
+          + '<div style="font-size:15px; font-weight:500; color:var(--text-main); text-align:center; line-height:1.5; padding: 0 10px;">' + item.statement + '</div>'
+          + '</div>'
+          + '</div>'
+          + '<div class="swipe-actions">'
+          + '<button class="swipe-btn btn-salah" onclick="handleSwipeAction(false)" title="Salah (Swipe Kiri)">❌</button>'
+          + '<button class="swipe-btn btn-benar" onclick="handleSwipeAction(true)" title="Benar (Swipe Kanan)">✅</button>'
+          + '</div>'
+          + '<div class="nav" style="margin-top:1.5rem"><span class="counter">Soal ' + (cardIndex + 1) + ' / ' + shuffled.length + '</span></div>'
+          + '</div>';
+      }
+
+      else if (mode === "simulator") {
+        if (!simTarget) {
+          var items = getActiveMenuItems();
+          html = '<div style="text-align: center; margin-bottom: 1.25rem;">'
+            + '<h2 style="font-size: 16px; font-weight:700; margin-bottom: 3px;">Simulator Pembuatan Kopi</h2>'
+            + '<p style="color: var(--text-muted); font-size: 12px;">Pilih menu di bawah ini untuk memulai simulasi penyeduhan:</p>'
+            + '</div>'
+            + '<div style="display:flex; justify-content:center; margin-bottom:1.25rem;">'
+            + '<button class="nav-btn btn-primary" onclick="startRandomSimulation()" style="color:white; font-weight:700;">🎲 Seduh Menu Acak</button>'
+            + '</div>'
+            + '<div class="browse-grid">';
+          for (var i = 0; i < items.length; i++) {
+            var item = items[i];
+            html += '<div class="browse-card" onclick="startSimulation(' + i + ')">'
+              + '<div class="browse-name">' + esc(item.name) + '</div>'
+              + '<div class="browse-cat">' + item.ingr.length + ' bahan</div>'
+              + '</div>';
+          }
+          html += '</div>';
+        }
+        else {
+          var categories = getCategoriesOfIngredients();
+
+          var hintBoxHtml = "";
+          if (simUseHint) {
+            hintBoxHtml = '<div class="recipe-hint-box">'
+              + '<strong>Resep Target:</strong>'
+              + '<ul style="list-style:disc; margin-left:16px; margin-top:4px; font-size:11px; color:var(--text-main);">';
+            simTarget.ingr.forEach(function (ing) {
+              hintBoxHtml += '<li>' + esc(ing[0]) + ': <strong>' + esc(ing[1] || 'secukupnya') + '</strong></li>';
+            });
+            hintBoxHtml += '</ul></div>';
+          }
+
+          var tabsHtml = "";
+          var catsList = Object.keys(categories);
+          catsList.forEach(function (c) {
+            var activeClass = c === simActiveTab ? " active" : "";
+            tabsHtml += '<button class="shelf-tab' + activeClass + '" onclick="setShelfTab(\'' + c + '\')">' + esc(c) + '</button>';
+          });
+
+          var gridHtml = "";
+          var activeIngrList = categories[simActiveTab] || [];
+          activeIngrList.forEach(function (ingName) {
+            gridHtml += '<div class="shelf-item" onclick="openPourModal(\'' + esc(ingName).replace(/'/g, "\\'") + '\')">'
+              + '<div class="shelf-item-name">' + esc(ingName) + '</div>'
+              + '</div>';
+          });
+
+          var layersHtml = "";
+          var maxCapacity = 250;
+          var totalG = simAddedIngredients.reduce((sum, item) => sum + (item.unit === 'g' ? item.amount : 0), 0);
+
+          simAddedIngredients.forEach(function (ing) {
+            var h = (ing.amount / Math.max(totalG, maxCapacity)) * 100;
+            layersHtml += '<div class="glass-layer" style="height:' + h + '%; background-color:' + ing.color + ';" title="' + esc(ing.name) + ' (' + ing.amount + 'g)"></div>';
+          });
+
+          var addedListHtml = "";
+          if (simAddedIngredients.length === 0) {
+            addedListHtml = '<li class="empty-list">Gelas kosong</li>';
+          } else {
+            simAddedIngredients.forEach(function (ing, index) {
+              addedListHtml += '<li>'
+                + '<span>' + (index + 1) + '. ' + esc(ing.name) + '</span>'
+                + '<span class="ingr-amt">' + ing.amount + ing.unit + '</span>'
+                + '</li>';
+            });
+          }
+
+          html = '<div class="sim-container">'
+            + '<div class="sim-left">'
+            + '<div class="scale-base">'
+            + '<div class="scale-display" id="scaleDisplay">' + (simScale).toFixed(1) + ' g</div>'
+            + '<div class="glass-container" id="glassContainer">' + layersHtml + '</div>'
+            + '</div>'
+            + '<div class="scale-buttons">'
+            + '<button class="sim-btn btn-secondary" onclick="tareScale()">Tare</button>'
+            + '<button class="sim-btn btn-danger" onclick="resetBrew()">Buang</button>'
+            + '</div>'
+            + '<div class="added-list-wrap">'
+            + '<h3>Isi Gelas:</h3>'
+            + '<ul class="added-list">' + addedListHtml + '</ul>'
+            + '</div>'
+            + '<button class="nav-btn btn-secondary" onclick="exitSimulation()" style="width:100%; margin-top:10px; justify-content:center;">&larr; Keluar</button>'
+            + '</div>'
+
+            + '<div class="sim-right">'
+            + '<div class="sim-target-header">'
+            + '<div class="card-label">Sajikan Minuman:</div>'
+            + '<div class="sim-target-name">' + esc(simTarget.name) + '</div>'
+            + '<button class="hint-btn" onclick="toggleSimHint()">' + (simUseHint ? 'Tutup Resep' : 'Lihat Resep (XP/2)') + '</button>'
+            + hintBoxHtml
+            + '</div>'
+
+            + '<div class="shelf-tabs">' + tabsHtml + '</div>'
+            + '<div class="shelf-grid">' + gridHtml + '</div>'
+
+            + '<button class="sim-btn btn-primary serve-btn" onclick="serveBrew()">Sajikan Minuman</button>'
+            + '</div>'
+            + '</div>';
+
+          if (simActiveIngredient) {
+            var unit = getUnitForIngredient(simActiveIngredient);
+            html += '<div class="pour-modal">'
+              + '<div class="pour-modal-content">'
+              + '<h3>Tuang ' + esc(simActiveIngredient) + '</h3>'
+              + '<div class="pour-input-wrap">'
+              + '<input type="text" id="pourAmount" value="' + numPadValue + '" readonly>'
+              + '<span>' + unit + '</span>'
+              + '</div>'
+              + '<div class="num-pad">'
+              + '<button onclick="pressNum(1)">1</button>'
+              + '<button onclick="pressNum(2)">2</button>'
+              + '<button onclick="pressNum(3)">3</button>'
+              + '<button onclick="pressNum(4)">4</button>'
+              + '<button onclick="pressNum(5)">5</button>'
+              + '<button onclick="pressNum(6)">6</button>'
+              + '<button onclick="pressNum(7)">7</button>'
+              + '<button onclick="pressNum(8)">8</button>'
+              + '<button onclick="pressNum(9)">9</button>'
+              + '<button onclick="pressNum(\'C\')">C</button>'
+              + '<button onclick="pressNum(0)">0</button>'
+              + '<button onclick="pressNum(\'back\')">⌫</button>'
+              + '</div>'
+              + '<div class="presets">'
+              + '<button onclick="addPreset(5)">+5</button>'
+              + '<button onclick="addPreset(10)">+10</button>'
+              + '<button onclick="addPreset(20)">+20</button>'
+              + '<button onclick="addPreset(30)">+30</button>'
+              + '<button onclick="addPreset(50)">+50</button>'
+              + '</div>'
+              + '<div class="pour-actions">'
+              + '<button class="sim-btn btn-secondary" onclick="closePourModal()">Batal</button>'
+              + '<button class="sim-btn btn-primary" onclick="confirmPour()">Tuang</button>'
+              + '</div>'
+              + '</div>'
+              + '</div>';
+          }
+        }
+      }
+
+      else if (mode === "statistik") {
+        var stats = calculateStats();
+        var overallPercent = Math.round((stats.mastered / Math.max(1, stats.total)) * 100);
+
+        var catProgressHtml = "";
+        for (var cat in stats.categoryStats) {
+          var cs = stats.categoryStats[cat];
+          catProgressHtml += '<div class="cat-progress-item">'
+            + '<div class="cat-progress-header">'
+            + '<span>' + esc(cat) + '</span>'
+            + '<span style="color:var(--primary);">' + cs.mastered + ' / ' + cs.total + ' (' + cs.percent + '%)</span>'
+            + '</div>'
+            + '<div class="cat-progress-bar-wrap">'
+            + '<div class="cat-progress-fill" style="width:' + cs.percent + '%;"></div>'
+            + '</div>'
+            + '</div>';
+        }
+
+        var filters = [
+          { id: "all", label: "Semua (" + stats.total + ")" },
+          { id: "mastered", label: "Sangat Hafal (" + stats.mastered + ")" },
+          { id: "learning", label: "Belajar (" + stats.learning + ")" },
+          { id: "struggling", label: "Butuh Latihan (" + stats.struggling + ")" },
+          { id: "unseen", label: "Belum Dicoba (" + stats.unseen + ")" }
+        ];
+
+        var filterBarHtml = '<div class="filter-bar">';
+        filters.forEach(function (f) {
+          var activeClass = f.id === currentStatFilter ? " active" : "";
+          filterBarHtml += '<button class="filter-btn' + activeClass + '" onclick="setStatFilter(\'' + f.id + '\')">' + esc(f.label) + '</button>';
+        });
+        filterBarHtml += '</div>';
+
+        var listHtml = '<div class="mastery-list-container">';
+        var listItemsCount = 0;
+
+        for (var cat in menus) {
+          menus[cat].forEach(function (item) {
+            var lvl = mastery[item.name] || 0;
+            var show = false;
+
+            if (currentStatFilter === "all") show = true;
+            else if (currentStatFilter === "mastered" && lvl === 5) show = true;
+            else if (currentStatFilter === "learning" && (lvl >= 3 && lvl <= 4)) show = true;
+            else if (currentStatFilter === "struggling" && (lvl >= 1 && lvl <= 2)) show = true;
+            else if (currentStatFilter === "unseen" && lvl === 0) show = true;
+
+            if (show) {
+              listItemsCount++;
+              var badgeClass = "";
+              var badgeText = "";
+              if (lvl === 5) { badgeClass = "mastered"; badgeText = "Sangat Hafal"; }
+              else if (lvl >= 3) { badgeClass = "learning"; badgeText = "Sedang Belajar (" + lvl + "/5)"; }
+              else if (lvl >= 1) { badgeClass = "struggling"; badgeText = "Butuh Latihan (" + lvl + "/5)"; }
+              else { badgeClass = "unseen"; badgeText = "Belum Dicoba"; }
+
+              listHtml += '<div class="mastery-list-item">'
+                + '<div class="mastery-item-info">'
+                + '<div class="mastery-item-name">' + esc(item.name) + '</div>'
+                + '<div style="font-size:11px; color:var(--text-muted); font-weight:500;">Kategori: ' + esc(cat) + '</div>'
+                + '<div><span class="mastery-badge ' + badgeClass + '">' + badgeText + '</span></div>'
+                + '</div>'
+                + '<button class="nav-btn btn-primary" onclick="quickBrewRecipe(\'' + esc(cat).replace(/'/g, "\\'") + '\', \'' + esc(item.name).replace(/'/g, "\\'") + '\')" style="padding: 6px 12px; font-size:11px; color:white; font-weight:700;">☕ Seduh</button>'
+                + '</div>';
+            }
+          });
+        }
+
+        if (listItemsCount === 0) {
+          listHtml += '<div class="empty-list" style="background:white; padding:1.25rem; border-radius:8px; border:1px solid var(--border);">Tidak ada menu di kategori filter ini.</div>';
+        }
+        listHtml += '</div>';
+
+        html = '<div class="stats-dashboard">'
+          + '<div style="text-align: center; margin-bottom: 0.5rem;">'
+          + '<h2 style="font-size: 16px; font-weight:700; margin-bottom: 2px;">Dashboard Statistik Hafalan</h2>'
+          + '<p style="color: var(--text-muted); font-size: 12px;">Pantau penguasaan resep menu Cosan Coffee Anda</p>'
+          + '</div>'
+
+          + '<div class="stats-summary-grid">'
+          + '<div class="stats-card">'
+          + '<div class="stats-label">Hafalan Selesai (Mastered)</div>'
+          + '<div class="stats-val">' + stats.mastered + ' / ' + stats.total + '</div>'
+          + '</div>'
+          + '<div class="stats-card">'
+          + '<div class="stats-label">Persentase Penguasaan</div>'
+          + '<div class="stats-val">' + overallPercent + '%</div>'
+          + '</div>'
+          + '</div>'
+
+          + '<div class="cat-progress-list">'
+          + '<h3 style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">Progres Per Kategori</h3>'
+          + catProgressHtml
+          + '</div>'
+
+          + '<div class="cat-progress-list" style="background:#FFFFFF;">'
+          + '<h3 style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:10px;">Daftar Hafalan Menu</h3>'
+          + filterBarHtml
+          + listHtml
+          + '</div>'
+          + '</div>';
+      }
+
+      else {
+        html = '<div class="search-container">'
+          + '<input type="text" class="search-input" id="browseSearch" placeholder="Cari menu atau bahan..." oninput="filterBrowse()">'
+          + '</div>'
+          + '<div class="browse-grid" id="browseGrid">';
+        for (var i = 0; i < items.length; i++) {
+          var item = items[i];
+          html += '<div class="browse-card" style="display:flex; flex-direction:column; overflow:hidden;" onclick="var d=this.querySelector(\'.browse-card-detail\'); d.style.display=d.style.display===\'none\'?\'block\':\'none\'; var a=this.querySelector(\'.browse-arrow\'); if(a) a.style.transform=d.style.display===\'block\'?\'rotate(180deg)\':\'none\';">'
+            + '<div class="browse-card-header" style="display:flex; justify-content:space-between; align-items:center; width:100%;">'
+            + '<div>'
+            + '<div class="browse-name">' + esc(item.name) + '</div>'
+            + '<div class="browse-cat">' + item.ingr.length + ' bahan &middot; ' + esc(getCategoryOfRecipe(item.name)) + '</div>'
+            + '</div>'
+            + '<span class="browse-arrow" style="font-size:10px; color:var(--text-muted); transition:transform 0.25s ease;">&#9660;</span>'
+            + '</div>'
+            + '<div class="browse-card-detail" style="display:none; margin-top:10px; border-top:1px solid #F1F5F9; padding-top:8px; width:100%;" onclick="event.stopPropagation()">'
+            + '<ul class="ingr-list">' + ingrRows(item.ingr) + '</ul>'
+            + '</div>'
+            + '</div>';
+        }
+        html += '</div>';
+      }
+      el.innerHTML = html;
+      if (mode === "swipe") {
+        initSwipeEvents();
+      }
+    }
+
+    function flipCard() {
+      flipped = !flipped;
+      var ci = document.getElementById("cardInner");
+      if (ci) ci.classList.toggle("flipped", flipped);
+    }
+
+    function prevCard() {
+      if (cardIndex > 0) {
+        cardIndex--;
+        flipped = false;
+        if (mode === "swipe") {
+          generateSwipeQuestion();
+        }
+        render();
+      }
+    }
+
+    function nextCard() {
+      if (cardIndex < shuffled.length - 1) { cardIndex++; }
+      else { shuffled = shuffle(getActiveMenuItems()); cardIndex = 0; }
+      flipped = false;
+      if (mode === "swipe") {
+        generateSwipeQuestion();
+      }
+      render();
+    }
+
+    function initSwipeEvents() {
+      var card = document.getElementById("swipeCard");
+      if (!card) return;
+
+      var startX = 0;
+      var startY = 0;
+      var currentX = 0;
+      var currentY = 0;
+      var dragging = false;
+
+      var badgeTrue = document.getElementById("badgeTrue");
+      var badgeFalse = document.getElementById("badgeFalse");
+
+      function onStart(e) {
+        if (quizAnswered) return;
+        dragging = true;
+        card.classList.add("dragging");
+        card.classList.remove("resetting");
+
+        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        startX = clientX;
+        startY = clientY;
+
+        window.addEventListener("mousemove", onMove);
+        window.addEventListener("mouseup", onEnd);
+        window.addEventListener("touchmove", onMove, { passive: false });
+        window.addEventListener("touchend", onEnd);
+      }
+
+      function onMove(e) {
+        if (!dragging) return;
+        if (e.cancelable) e.preventDefault(); // Prevent page scroll on touch
+
+        var clientX = e.touches ? e.touches[0].clientX : e.clientX;
+        var clientY = e.touches ? e.touches[0].clientY : e.clientY;
+        currentX = clientX - startX;
+        currentY = clientY - startY;
+
+        var rot = currentX * 0.08;
+        card.style.transform = "translate3d(" + currentX + "px, " + currentY + "px, 0) rotate(" + rot + "deg)";
+
+        if (currentX > 0) {
+          var opacity = Math.min(1, currentX / 100);
+          if (badgeTrue) badgeTrue.style.opacity = opacity;
+          if (badgeFalse) badgeFalse.style.opacity = 0;
+        } else {
+          var opacity = Math.min(1, -currentX / 100);
+          if (badgeFalse) badgeFalse.style.opacity = opacity;
+          if (badgeTrue) badgeTrue.style.opacity = 0;
+        }
+      }
+
+      function onEnd() {
+        if (!dragging) return;
+        dragging = false;
+        card.classList.remove("dragging");
+
+        window.removeEventListener("mousemove", onMove);
+        window.removeEventListener("mouseup", onEnd);
+        window.removeEventListener("touchmove", onMove);
+        window.removeEventListener("touchend", onEnd);
+
+        var threshold = 120;
+        if (currentX > threshold) {
+          card.classList.add("flying-right");
+          if (badgeTrue) badgeTrue.style.opacity = 1;
+          setTimeout(function () {
+            submitSwipeAnswer(true);
+          }, 300);
+        } else if (currentX < -threshold) {
+          card.classList.add("flying-left");
+          if (badgeFalse) badgeFalse.style.opacity = 1;
+          setTimeout(function () {
+            submitSwipeAnswer(false);
+          }, 300);
+        } else {
+          card.classList.add("resetting");
+          card.style.transform = "";
+          if (badgeTrue) badgeTrue.style.opacity = 0;
+          if (badgeFalse) badgeFalse.style.opacity = 0;
+        }
+        currentX = 0;
+        currentY = 0;
+      }
+
+      card.addEventListener("mousedown", onStart);
+      card.addEventListener("touchstart", onStart, { passive: true });
+    }
+
+    function handleSwipeAction(answer) {
+      if (quizAnswered) return;
+      var card = document.getElementById("swipeCard");
+      var badgeTrue = document.getElementById("badgeTrue");
+      var badgeFalse = document.getElementById("badgeFalse");
+
+      if (answer) {
+        if (card) card.classList.add("flying-right");
+        if (badgeTrue) badgeTrue.style.opacity = 1;
+      } else {
+        if (card) card.classList.add("flying-left");
+        if (badgeFalse) badgeFalse.style.opacity = 1;
+      }
+
+      setTimeout(function () {
+        submitSwipeAnswer(answer);
+      }, 300);
+    }
+
+    function submitSwipeAnswer(chosenAnswer) {
+      if (quizAnswered) return;
+      quizAnswered = true;
+      quizTotal++;
+
+      var isCorrect = (chosenAnswer === currentSwipeQuestion.isTrue);
+      var correctText = currentSwipeQuestion.isTrue ? "Benar" : "Salah";
+      var recipeName = currentSwipeQuestion.recipeName;
+
+      if (isCorrect) {
+        quizScore++;
+        rewardXP(15);
+        adjustMastery(recipeName, 1);
+      } else {
+        adjustMastery(recipeName, -1);
+      }
+
+      var container = document.querySelector(".swipe-container");
+      if (!container) return;
+
+      var wrapper = container.querySelector(".swipe-card-wrapper");
+      var actions = container.querySelector(".swipe-actions");
+      if (wrapper) wrapper.style.display = "none";
+      if (actions) actions.style.display = "none";
+
+      var fbDiv = document.createElement("div");
+      fbDiv.className = "detail-box result-card";
+      fbDiv.style.width = "100%";
+      fbDiv.style.maxWidth = "340px";
+      fbDiv.style.textAlign = "center";
+      fbDiv.style.animation = "popIn 0.3s ease-out";
+
+      var title = isCorrect ? "🎉 Hebat!" : "😢 Kurang Tepat";
+      var color = isCorrect ? "var(--correct)" : "var(--wrong)";
+      var xpBonus = isCorrect ? "<p style='color:var(--correct); font-weight:700; margin-bottom: 8px;'>+15 XP</p>" : "";
+
+      var recipe = null;
+      for (var cat in menus) {
+        var found = menus[cat].find(function (item) { return item.name === recipeName; });
+        if (found) { recipe = found; break; }
+      }
+
+      var explanation = "";
+      if (!isCorrect && recipe) {
+        explanation = "<div style='font-size:12px; color:var(--text-muted); text-align:left; margin-top:10px; border-top:1px solid var(--border); padding-top:10px;'>"
+          + "<strong>Resep asli " + esc(recipeName) + ":</strong>"
+          + "<ul style='list-style:disc; margin-left:16px; margin-top:4px;'>";
+        recipe.ingr.forEach(function (ing) {
+          explanation += "<li>" + esc(ing[0]) + ": " + esc(ing[1] || 'secukupnya') + "</li>";
+        });
+        explanation += "</ul></div>";
+      }
+
+      fbDiv.innerHTML = '<div class="card-label">Hasil Penilaian</div>'
+        + '<h2 style="font-size:18px; font-weight:700; color:' + color + '; margin-bottom:6px;">' + title + '</h2>'
+        + xpBonus
+        + '<p style="font-size:13px; color:var(--text-main); line-height:1.4;">Pernyataan tersebut bernilai: <strong>' + correctText + '</strong>.</p>'
+        + explanation
+        + '<button class="nav-btn btn-primary" onclick="nextSwipeCard()" style="margin-top:15px; width:100%; justify-content:center; color:white; font-weight:700;">Soal Berikutnya &rarr;</button>';
+
+      container.insertBefore(fbDiv, container.querySelector(".nav"));
+    }
+
+    function nextSwipeCard() {
+      quizAnswered = false;
+      nextCard();
+    }
+
+    function answerQuiz(chosenIdx, btn) {
+      if (quizAnswered) return;
+      var chosen = window._quizOpts[chosenIdx];
+      var correct = currentQuestion.correct;
+      quizAnswered = true;
+      quizTotal++;
+
+      if (chosen === correct) {
+        quizScore++;
+        rewardXP(20);
+        adjustMastery(correct, 1);
+        btn.classList.add("correct");
+      } else {
+        adjustMastery(correct, -1);
+        btn.classList.add("wrong");
+        var opts = document.querySelectorAll(".quiz-opt");
+        for (var i = 0; i < opts.length; i++) {
+          if (opts[i].textContent.trim() === correct) opts[i].classList.add("correct");
+        }
+      }
+
+      var allOpts = document.querySelectorAll(".quiz-opt");
+      for (var i = 0; i < allOpts.length; i++) allOpts[i].disabled = true;
+
+      var feedback = document.createElement("div");
+      feedback.style.marginTop = "12px";
+      feedback.style.fontWeight = "600";
+      feedback.style.fontSize = "13px";
+      feedback.style.padding = "8px 12px";
+      feedback.style.borderRadius = "8px";
+
+      if (chosen === correct) {
+        feedback.style.background = "var(--correct-bg)";
+        feedback.style.color = "var(--correct)";
+        feedback.innerHTML = "✅ Benar! +20 XP";
+      } else {
+        feedback.style.background = "var(--wrong-bg)";
+        feedback.style.color = "var(--wrong)";
+        feedback.innerHTML = "❌ Salah! Jawaban benar: <strong>" + esc(correct) + "</strong>";
+      }
+
+      document.getElementById("content").appendChild(feedback);
+
+      var nextBtn = document.createElement("button");
+      nextBtn.className = "nav-btn btn-primary";
+      nextBtn.style.marginTop = "12px";
+      nextBtn.style.color = "white";
+      nextBtn.style.fontWeight = "700";
+      nextBtn.innerHTML = "Soal Berikutnya &rarr;";
+
+      nextBtn.onclick = function () {
+        quizAnswered = false;
+        nextCard();
+      };
+
+      document.getElementById("content").appendChild(nextBtn);
+    }
+
+    function showDetail(idx) {
+      var item = getActiveMenuItems()[idx];
+      if (!item) return;
+      document.getElementById("content").innerHTML =
+        '<div class="detail-box">'
+        + '<div class="card-label">' + esc(getCategoryOfRecipe(item.name)) + '</div>'
+        + '<div class="card-name" style="text-align:left; margin-bottom:1rem; font-size:20px;">' + esc(item.name) + '</div>'
+        + '<ul class="ingr-list">' + ingrRows(item.ingr) + '</ul>'
+        + '</div>'
+        + '<button class="nav-btn btn-secondary" onclick="setMode(\'browse\')" style="margin-top: 0.5rem;">&larr; Kembali</button>';
+    }
+
+    function filterBrowse() {
+      var query = document.getElementById("browseSearch").value.toLowerCase();
+      var items = getActiveMenuItems();
+      var grid = document.getElementById("browseGrid");
+      if (!grid) return;
+
+      var html = "";
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var matchName = item.name.toLowerCase().includes(query);
+        var matchIngr = item.ingr.some(ing => ing[0].toLowerCase().includes(query));
+
+        if (matchName || matchIngr) {
+          html += '<div class="browse-card" style="display:flex; flex-direction:column; overflow:hidden;" onclick="var d=this.querySelector(\'.browse-card-detail\'); d.style.display=d.style.display===\'none\'?\'block\':\'none\'; var a=this.querySelector(\'.browse-arrow\'); if(a) a.style.transform=d.style.display===\'block\'?\'rotate(180deg)\':\'none\';">'
+            + '<div class="browse-card-header" style="display:flex; justify-content:space-between; align-items:center; width:100%;">'
+            + '<div>'
+            + '<div class="browse-name">' + esc(item.name) + '</div>'
+            + '<div class="browse-cat">' + item.ingr.length + ' bahan &middot; ' + esc(getCategoryOfRecipe(item.name)) + '</div>'
+            + '</div>'
+            + '<span class="browse-arrow" style="font-size:10px; color:var(--text-muted); transition:transform 0.25s ease;">&#9660;</span>'
+            + '</div>'
+            + '<div class="browse-card-detail" style="display:none; margin-top:10px; border-top:1px solid #F1F5F9; padding-top:8px; width:100%;" onclick="event.stopPropagation()">'
+            + '<ul class="ingr-list">' + ingrRows(item.ingr) + '</ul>'
+            + '</div>'
+            + '</div>';
+        }
+      }
+      grid.innerHTML = html;
+    }
+
+    // Simulator Functions
+    function startSimulation(idx) {
+      simTarget = getActiveMenuItems()[idx];
+      simScale = 0.0;
+      simTareValue = 0.0;
+      simAddedIngredients = [];
+      simUseHint = false;
+      render();
+    }
+
+    function startRandomSimulation() {
+      var items = getActiveMenuItems();
+      var randIdx = Math.floor(Math.random() * items.length);
+      startSimulation(randIdx);
+    }
+
+    function getUnitForIngredient(name) {
+      var lower = name.toLowerCase();
+      if (lower.includes("pcs") || lower.includes("garnish") || lower.includes("sunkist") || lower.includes("lemon") || lower.includes("buah") || lower.includes("stick") || lower.includes("bag")) {
+        return "pcs";
+      }
+      return "g";
+    }
+
+    function setShelfTab(tabName) {
+      simActiveTab = tabName;
+      render();
+    }
+
+    function openPourModal(ingName) {
+      simActiveIngredient = ingName;
+      numPadValue = "0";
+      render();
+    }
+
+    function closePourModal() {
+      simActiveIngredient = null;
+      render();
+    }
+
+    function pressNum(val) {
+      if (val === 'C') {
+        numPadValue = "0";
+      } else if (val === 'back') {
+        if (numPadValue.length > 1) {
+          numPadValue = numPadValue.slice(0, -1);
+        } else {
+          numPadValue = "0";
+        }
+      } else {
+        if (numPadValue === "0") {
+          numPadValue = String(val);
+        } else {
+          numPadValue += String(val);
+        }
+      }
+      var inputEl = document.getElementById("pourAmount");
+      if (inputEl) inputEl.value = numPadValue;
+    }
+
+    function addPreset(val) {
+      var cur = parseInt(numPadValue) || 0;
+      numPadValue = String(cur + val);
+      var inputEl = document.getElementById("pourAmount");
+      if (inputEl) inputEl.value = numPadValue;
+    }
+
+    function confirmPour() {
+      var amt = parseInt(numPadValue) || 0;
+      if (amt <= 0) {
+        closePourModal();
+        return;
+      }
+
+      var name = simActiveIngredient;
+      var unit = getUnitForIngredient(name);
+      var color = getIngredientColor(name);
+
+      simAddedIngredients.push({
+        name: name,
+        amount: amt,
+        unit: unit,
+        color: color
+      });
+
+      if (unit === 'g') {
+        simScale += amt;
+      }
+
+      closePourModal();
+    }
+
+    function tareScale() {
+      simScale = 0.0;
+      render();
+    }
+
+    function resetBrew() {
+      simScale = 0.0;
+      simTareValue = 0.0;
+      simAddedIngredients = [];
+      render();
+    }
+
+    function toggleSimHint() {
+      simUseHint = !simUseHint;
+      render();
+    }
+
+    function exitSimulation() {
+      simTarget = null;
+      var container = document.getElementById("appContainer");
+      if (container) container.classList.remove("wide");
+      render();
+    }
+
+    function parseAmount(amtStr) {
+      if (!amtStr) return { value: 0, unit: "special" };
+      var val = parseFloat(amtStr);
+      var unit = amtStr.replace(val, "").trim();
+      return { value: val, unit: unit || "g" };
+    }
+
+    function serveBrew() {
+      if (!simTarget) return;
+
+      var targetList = simTarget.ingr;
+      var addedList = simAddedIngredients;
+
+      var targets = targetList.map(function (item) {
+        var name = item[0];
+        var amtStr = item[1];
+        var amtParsed = parseAmount(amtStr);
+        return { name: name, value: amtParsed.value, unit: amtParsed.unit };
+      });
+
+      var auditLogs = [];
+      var matchedCount = 0;
+      var penaltyPoints = 0;
+
+      var addedMap = {};
+      addedList.forEach(function (item) {
+        if (!addedMap[item.name]) {
+          addedMap[item.name] = { amount: 0, unit: item.unit };
+        }
+        addedMap[item.name].amount += item.amount;
+      });
+
+      targets.forEach(function (target) {
+        var added = addedMap[target.name];
+        if (!added) {
+          auditLogs.push({
+            status: "missing",
+            msg: "❌ Bahan hilang: <strong>" + esc(target.name) + "</strong> (Butuh " + (target.value > 0 ? target.value + target.unit : "secukupnya") + ")"
+          });
+          penaltyPoints += 25;
+        } else {
+          added.checked = true;
+
+          if (target.unit === "special") {
+            auditLogs.push({
+              status: "perfect",
+              msg: "✅ " + esc(target.name) + ": Ditambahkan! (Sesuai resep)"
+            });
+            matchedCount++;
+          } else {
+            var diff = Math.abs(added.amount - target.value);
+            if (diff === 0) {
+              auditLogs.push({
+                status: "perfect",
+                msg: "✅ " + esc(target.name) + ": Sangat Tepat! (" + added.amount + target.unit + " / " + target.value + target.unit + ")"
+              });
+              matchedCount++;
+            } else if (diff <= 2) {
+              auditLogs.push({
+                status: "perfect",
+                msg: "✅ " + esc(target.name) + ": Tepat (Toleransi)! (" + added.amount + target.unit + " / " + target.value + target.unit + ")"
+              });
+              matchedCount++;
+            } else {
+              var label = added.amount > target.value ? "Terlalu banyak" : "Kurang";
+              auditLogs.push({
+                status: "imperfect",
+                msg: "⚠️ " + esc(target.name) + ": " + label + " (" + added.amount + target.unit + " / " + target.value + target.unit + ")"
+              });
+              var errorPct = diff / target.value;
+              penaltyPoints += Math.min(20, Math.round(errorPct * 15));
+            }
+          }
+        }
+      });
+
+      for (var name in addedMap) {
+        if (!addedMap[name].checked) {
+          auditLogs.push({
+            status: "extra",
+            msg: "❌ Bahan tidak perlu: <strong>" + esc(name) + "</strong> (" + addedMap[name].amount + addedMap[name].unit + ")"
+          });
+          penaltyPoints += 15;
+        }
+      }
+
+      var score = Math.max(0, 100 - penaltyPoints);
+
+      var stars = 1;
+      if (score === 100) stars = 5;
+      else if (score >= 85) stars = 4;
+      else if (score >= 65) stars = 3;
+      else if (score >= 40) stars = 2;
+
+      var baseXP = 0;
+      if (stars === 5) baseXP = 50;
+      else if (stars === 4) baseXP = 35;
+      else if (stars === 3) baseXP = 20;
+      else if (stars === 2) baseXP = 10;
+      else baseXP = 5;
+
+      var finalXP = simUseHint ? Math.round(baseXP / 2) : baseXP;
+
+      var recipeName = simTarget.name;
+      if (stars >= 4) {
+        adjustMastery(recipeName, 1);
+      } else if (stars <= 2) {
+        adjustMastery(recipeName, -1);
+      }
+
+      rewardXP(finalXP);
+
+      var starsHtml = "";
+      for (var i = 1; i <= 5; i++) {
+        starsHtml += i <= stars ? "★" : "☆";
+      }
+
+      var auditHtml = '<ul class="audit-list">';
+      auditLogs.forEach(function (log) {
+        auditHtml += '<li class="audit-item">' + log.msg + '</li>';
+      });
+      auditHtml += '</ul>';
+
+      var xpFeedback = "+" + finalXP + " XP";
+      if (simUseHint) {
+        xpFeedback += " (Dipotong 50% karena membuka resep)";
+      }
+
+      var resultHtml = '<div class="detail-box result-card">'
+        + '<div class="card-label">Hasil Seduhan Barista</div>'
+        + '<div class="result-title">' + esc(recipeName) + '</div>'
+        + '<div class="stars-wrap">' + starsHtml + '</div>'
+        + '<h2 style="font-size:20px; font-weight:700; color:var(--primary); margin-bottom:4px;">Skor: ' + score + '%</h2>'
+        + '<p style="font-weight:700; color:var(--correct); font-size:13px; margin-bottom:8px;">' + xpFeedback + '</p>'
+        + auditHtml
+        + '<div style="display:flex; gap:8px; justify-content:center; margin-top:12px;">'
+        + '<button class="nav-btn btn-secondary" onclick="exitSimulation()">&larr; Kembali</button>'
+        + '<button class="nav-btn btn-primary" onclick="retrySimulation()" style="color:white; font-weight:700;">🔄 Seduh Lagi</button>'
+        + '</div>'
+        + '</div>';
+
+      document.getElementById("content").innerHTML = resultHtml;
+    }
+
+    function retrySimulation() {
+      simScale = 0.0;
+      simTareValue = 0.0;
+      simAddedIngredients = [];
+      simUseHint = false;
+      render();
+    }
+
+    loadProgress();
+    renderTabs();
+    setMode("flashcard");
+  </script>
+</body>
+
+</html>
